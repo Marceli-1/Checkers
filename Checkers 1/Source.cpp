@@ -76,6 +76,5 @@ public:
 
 int main() {
 	Game g1;
-	cout << "test";
 }
 
