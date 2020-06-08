@@ -18,7 +18,7 @@ class Place {
 };
 
 
-class Board { //@ - czarne, # - bia³e
+class Board { //@ - czarne, # - biaÂ³e
 public:
 	Place board[8][8];
 
@@ -167,7 +167,7 @@ public:
 		cout << "   A   B   C   D   E   F   G   H" << endl << endl;
 	}
 };
-//Penis
+
 class Game {
 	bool win = false;
 	bool white_turn = true;
