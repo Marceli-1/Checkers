@@ -36,7 +36,7 @@ class Place {
 };
 
 
-class Board { //@ - czarne, # - bia³e
+class Board { //@ - czarne, # - biaÂ³e
 public:
 	Place board[8][8];
 
