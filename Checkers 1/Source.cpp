@@ -90,42 +90,77 @@ public:
 			}
 			else if (!white_turn && temp.blank_or_not == black_piece_sign) { // black move
 				if (places_to_go_black(temp, x, y, white_turn) != white_turn)
-					{
-						white_turn = true;
-						gameBoard();
-					}
+				{
+					white_turn = true;
+					gameBoard();
+				}
 			}
-			else{
+			else {
 				cout << "Podales niewlasciwe wspolrzedne :(" << endl;
 			}
 		}
 		else {
-				cout << "Podales niewlasciwe wspolrzedne :(" << endl;
+			cout << "Podales niewlasciwe wspolrzedne :(" << endl;
 		}
 	}
 
-	bool out_of_plane(int y, int x){
+	bool out_of_plane(int y, int x) {
 		if (x < 8 && x >= 0 && y < 8 && y >= 0) //kontrola skrajnych pol szachownicy
 			return false;
 		return true;
 	}
-
-	void piece_down(int x, int y, int x_2, int y_2){ //usuwanie pionka zbitego
-		int x_to_kill = (x + x_2)/2;
-		int y_to_kill = (y + y_2)/2; 
+	void piece_down(int x, int y, int x_2, int y_2) { //usuwanie pionka zbitego
+		int x_to_kill = (x + x_2) / 2;
+		int y_to_kill = (y + y_2) / 2;
 		board[y_to_kill][x_to_kill].set_color("blank");
 	}
+	bool multibeat_white(int y, int x)
+	{
+		if (board[y + 1][x + 1].existing_piece == true && board[y + 1][x + 1].blank_or_not == black_piece_sign && board[y + 2][x + 2].existing_piece == false)  //warunek na bicie wielokrotne
+		{	
+			cout << "jablko7" << endl;return true; 
+		}
+		else
+		{
+			if (board[y + 1][x - 1].existing_piece == true && board[y + 1][x - 1].blank_or_not == black_piece_sign && board[y + 2][x - 2].existing_piece == false)
+			{
+				cout << "jablko8" << endl;return true; 
+			}
+			else {
+				return false;
+			}
+		}
+	}
+	bool multibeat_black(int y, int x)
+	{
+		if (board[y - 1][x + 1].existing_piece == true && board[y - 1][x + 1].blank_or_not == white_piece_sign && board[y - 2][x + 2].existing_piece == false)  //warunek na bicie wielokrotne
+		{
+			cout << "jablko5" << endl;
+			return true;
+		}
+		else
+		{
+			if (board[y - 1][x - 1].existing_piece == true && board[y - 1][x - 1].blank_or_not == white_piece_sign && board[y - 2][x - 2].existing_piece == false)
+			{
+				cout << "jablko6" << endl;return true;
+				
+			}
+			else {
+				return false;
+			}
+		}
+	}
+		
 
 	bool places_to_go_white(Place temp, int x, int y, bool turn) {
 		string places = "";
 		bool move_available = false;
 		bool another_move = false; //bicie wielokrotne
 		do {
+			gameBoard();
 			move_available = false;
 			places = "";
-
-			if (temp.queen == false) {
-				
+			if (temp.queen == false) {			
 					for (int i = -1; i <= 1; i += 2) {
 						if (x + i < 8 && x + i >= 0 && y + 1 < 8) { //kontrola skrajnych pol szachownicy
 							if (!board[y + 1][x + i].existing_piece && !another_move) { //sprawdza czy na danym polu jest pionek
@@ -142,18 +177,16 @@ public:
 									places += ", ";
 									move_available = true; another_move = false;
 								}
-							}
-							
+							}	
 						}
-					}
-				
+					}	
 				if (another_move && !move_available) 
 					return !turn; 
 				else if (!move_available)
 					places = "Brak mozliwosci ruchu.";
 				else {
 					places.erase(places.end() - 2);
-					turn = !turn;
+					
 				}
 				
 				if (places.size() > 5 and places.size() < 15)  
@@ -170,23 +203,17 @@ public:
 							
 							y = (int)(places[1] - '1');
 							x = (int)(places[0] - 'A');
-							if(board[y+1][x+1].existing_piece==true && board[y + 1][x + 1].blank_or_not == black_piece_sign && board[y + 2][x + 2].existing_piece==false) //warunek na bicie wielokrotne
+							if(multibeat_white(y,x))
 							{
-							another_move = true;gameBoard();
-							}
-							else
-							{
-								if (board[y + 1][x - 1].existing_piece == true && board[y + 1][x - 1].blank_or_not == black_piece_sign && board[y + 2][x - 2].existing_piece == false)
-								{
-									another_move = true; gameBoard();
-								}
-								else {
-									another_move = false;
-									return !turn;
-								}
-							}
+								another_move = true; cout << "jablko1" << endl; //gameBoard();
 							
+							}
+							else {
+									another_move = false;
 
+									return !turn;
+									
+								}
 						}
 					}
 					else {
@@ -198,24 +225,137 @@ public:
 								
 								y = (int)(places[1] - '1');
 								x = (int)(places[0] - 'A');
-								/*
-									sprawdzanie czy na miejscu do bicia jest jakis pionek && sprawdzanie czy jest czarny && sprawdzanie czy pole do lądowania jest puste
-								*/
-								if (board[y + 1][x + 1].existing_piece == true && board[y + 1][x + 1].blank_or_not == black_piece_sign && board[y + 2][x + 2].existing_piece == false)  //warunek na bicie wielokrotne
+								if (multibeat_white(y, x))
 								{
-									another_move = true; gameBoard();
+									another_move = true; cout << "jablko2" << endl; //gameBoard();
+									
 								}
-								else
-								{
-									if (board[y + 1][x - 1].existing_piece == true && board[y + 1][x - 1].blank_or_not == black_piece_sign && board[y + 2][x - 2].existing_piece == false)
-									{
-										another_move = true; gameBoard();
-									}
-									else {
-										another_move = false;
-										return !turn;
+								else {
+									another_move = false; 
+									return !turn;
+									
+								}
 
-									}
+							}
+						}
+					}
+				}
+				else {
+					if (places.size() > 15)
+					{
+						cout << places; another_move = false;
+					}
+					else {
+						cout << " Jesli chcesz sie ruszyc na pole: " << places[0] << places[1] << " wcisnij 1" << endl;
+						int wybor;
+						cin >> wybor;
+						if (wybor == 1) {
+							board[(int)(places[1] - '1')][(int)(places[0] - 'A')].set_color(white_piece_sign);
+							board[y][x].set_color("blank");
+
+							if (abs(y - (int)(places[1] - '1')) == 2 && abs(x - (int)(places[0] - 'A')) == 2) { //bicie
+								piece_down(x, y, (int)(places[0] - 'A'), (int)(places[1] - '1'));
+								
+								y = (int)(places[1] - '1');
+								x = (int)(places[0] - 'A');
+								if (multibeat_white(y, x))
+								{
+									another_move = true; cout << "jablko3" << endl; //gameBoard();
+								}
+								else {
+									another_move = false;
+
+									return !turn;
+								}
+							}
+						}
+					}
+				}
+			}
+			temp = board[y][x];
+		} while (another_move);
+		return !turn;
+	}
+	bool places_to_go_black(Place temp, int x, int y, bool turn) {
+		string places = "";
+		bool move_available = false;
+		bool another_move = false; //bicie wielokrotne
+		do {
+			gameBoard();
+			move_available = false;
+			places = "";
+
+			if (temp.queen == false) {
+
+				for (int i = -1; i <= 1; i += 2) {
+					if (x + i < 8 && x + i >= 0 && y - 1 >= 0) { //kontrola skrajnych pol szachownicy
+						if (!board[y - 1][x + i].existing_piece && !another_move) { //sprawdza czy na danym polu jest pionek
+							places += (char)(x + i + 'A');
+							places += (char)(y - 1 + '1');
+							places += ", ";
+							move_available = true; another_move = false;
+						}
+						else if (board[y - 1][x + i].character != temp.character && board[y - 1][x + i].existing_piece) {
+							//przeciwny kolor na nastepnym polu
+							if (!out_of_plane(y - 2, x + 2 * i) && !board[y - 2][x + 2 * i].existing_piece) {
+								places += (char)(x + 2 * i + 'A');
+								places += (char)(y - 2 + '1');
+								places += ", ";
+								move_available = true; another_move = false;
+							}
+						}
+					}
+				}
+
+				if (another_move && !move_available)
+					return !turn;
+				else if (!move_available)
+					places = "Brak mozliwosci ruchu.";
+				else {
+					places.erase(places.end() - 2);
+					
+				}
+
+				if (places.size() > 5 and places.size() < 15)
+				{
+					cout << " Jesli chcesz sie ruszyc na pole: " << places[0] << places[1] << " wcisnij 1 ,a jesli interesuje cie pole: " << places[4] << places[5] << " wybierz 2" << endl;
+					int wybor;
+					cin >> wybor;
+					if (wybor == 1) {
+						board[(int)(places[1] - '1')][(int)(places[0] - 'A')].set_color(black_piece_sign);
+						board[y][x].set_color("blank");
+
+						if (abs(y - (int)(places[1] - '1')) == 2 && abs(x - (int)(places[0] - 'A')) == 2) {//czy zbiles pionek
+							piece_down(x, y, (int)(places[0] - 'A'), (int)(places[1] - '1'));
+
+							y = (int)(places[1] - '1');
+							x = (int)(places[0] - 'A');
+							if (multibeat_black(y, x))
+							{
+								another_move = true; //gameBoard();
+							}
+							else {
+								another_move = false;
+								return !turn;
+							}
+						}
+					}
+					else {
+						board[(int)(places[5] - '1')][(int)(places[4] - 'A')].set_color(black_piece_sign);
+						board[y][x].set_color("blank");
+
+						if (abs(y - (int)(places[5] - '1')) == 2 && abs(x - (int)(places[4] - 'A')) == 2) { //bicie
+							piece_down(x, y, (int)(places[4] - 'A'), (int)(places[5] - '1')); {
+
+								y = (int)(places[1] - '1');
+								x = (int)(places[0] - 'A');
+								if (multibeat_black(y, x))
+								{
+									another_move = true; //gameBoard();
+								}
+								else {
+									another_move = false;
+									return !turn;
 								}
 
 							}
@@ -233,30 +373,21 @@ public:
 						int wybor;
 						cin >> wybor;
 						if (wybor == 1) {
-							board[(int)(places[1] - '1')][(int)(places[0] - 'A')].set_color(white_piece_sign);
+							board[(int)(places[1] - '1')][(int)(places[0] - 'A')].set_color(black_piece_sign);
 							board[y][x].set_color("blank");
 
 							if (abs(y - (int)(places[1] - '1')) == 2 && abs(x - (int)(places[0] - 'A')) == 2) { //bicie
 								piece_down(x, y, (int)(places[0] - 'A'), (int)(places[1] - '1'));
-								
+
 								y = (int)(places[1] - '1');
 								x = (int)(places[0] - 'A');
-								if (board[y + 1][x + 1].existing_piece == true && board[y + 1][x + 1].blank_or_not == black_piece_sign && board[y + 2][x + 2].existing_piece == false) //warunek na bicie wielokrotne
+								if (multibeat_black(y, x))
 								{
-									another_move = true; gameBoard();
-
+									another_move = true; //gameBoard();
 								}
-								else
-								{
-									if (board[y + 1][x - 1].existing_piece == true && board[y + 1][x - 1].blank_or_not == black_piece_sign && board[y + 2][x - 2].existing_piece == false)
-									{
-										another_move = true; gameBoard();
-									}
-									else {
-										another_move = false;
-										return !turn;
-
-									}
+								else {
+									another_move = false;
+									return !turn;
 								}
 
 							}
@@ -266,65 +397,64 @@ public:
 			}
 			temp = board[y][x];
 		} while (another_move);
-		return turn;
+		return !turn;
 	}
-
-	bool places_to_go_black(Place temp, int x, int y, bool turn) {
-		string places = "";
-		bool move_available = false;
-		if (temp.queen == false) { //sprawdza czy na danym polu jest pionek
-			for (int i = -1; i <= 1; i += 2) {
-				if (x + i < 8 && x + i >= 0 && y - 1 < 8) { //kontrola skrajnych pol szachownicy
-					if (!board[y - 1][x + i].existing_piece) {
-						places += (char)(x + i + 'A');
-						places += (char)(y - 1 + '1');
-						places += ", ";
-						move_available = true;
-					}
-					
-				}
-			}
-			
-			if (!move_available)
-			{
-				places = "Brak mozliwosci ruchu.";
-			}
-			else
-			{
-				places.erase(places.end() - 2);
-				turn = !turn;
-			}
-			
-			if (places.size() > 5 and places.size()<15)
-			{
-				cout << " Jesli chcesz sie ruszyc na pole: " << places[0] << places[1] << " wcisnij 1 ,a jesli interesuje cie pole: " << places[4] << places[5] << " wybierz 2" << endl;
-				int wybor;
-				cin >> wybor;
-				if (wybor == 1) {
-					cout << (int)(places[1] - '1') << " " << (int)(places[0] - 'A');
-					board[(int)(places[1] - '1')][(int)(places[0] - 'A')].set_color(black_piece_sign);
-					board[y][x].set_color("blank");
-				}
-				else {
-					board[(int)(places[5] - '1')][(int)(places[4] - 'A')].set_color(black_piece_sign);
-					board[y][x].set_color("blank");
-				}
-			}
-			else {
-				if (places.size() > 15)
-					cout << places;
-				else {
-					cout << " Jesli chcesz sie ruszyc na pole: " << places[0] << places[1] << " wcisnij 1" << endl;
-					int wybor;
-					cin >> wybor;
-					if (wybor == 1);
-					board[(int)(places[1] - '1')][(int)(places[0] - 'A')].set_color(black_piece_sign);
-					board[y][x].set_color("blank");
-				}
-			}
-		}
-		return turn;
-	}
+	//bool places_to_go_black(Place temp, int x, int y, bool turn) {
+	//	string places = "";
+	//	bool move_available = false;
+	//	if (temp.queen == false) { //sprawdza czy na danym polu jest pionek
+	//		for (int i = -1; i <= 1; i += 2) {
+	//			if (x + i < 8 && x + i >= 0 && y - 1 < 8) { //kontrola skrajnych pol szachownicy
+	//				if (!board[y - 1][x + i].existing_piece) {
+	//					places += (char)(x + i + 'A');
+	//					places += (char)(y - 1 + '1');
+	//					places += ", ";
+	//					move_available = true;
+	//				}
+	//				
+	//			}
+	//		}
+	//		
+	//		if (!move_available)
+	//		{
+	//			places = "Brak mozliwosci ruchu.";
+	//		}
+	//		else
+	//		{
+	//			places.erase(places.end() - 2);
+	//			turn = !turn;
+	//		}
+	//		
+	//		if (places.size() > 5 and places.size()<15)
+	//		{
+	//			cout << " Jesli chcesz sie ruszyc na pole: " << places[0] << places[1] << " wcisnij 1 ,a jesli interesuje cie pole: " << places[4] << places[5] << " wybierz 2" << endl;
+	//			int wybor;
+	//			cin >> wybor;
+	//			if (wybor == 1) {
+	//				cout << (int)(places[1] - '1') << " " << (int)(places[0] - 'A');
+	//				board[(int)(places[1] - '1')][(int)(places[0] - 'A')].set_color(black_piece_sign);
+	//				board[y][x].set_color("blank");
+	//			}
+	//			else {
+	//				board[(int)(places[5] - '1')][(int)(places[4] - 'A')].set_color(black_piece_sign);
+	//				board[y][x].set_color("blank");
+	//			}
+	//		}
+	//		else {
+	//			if (places.size() > 15)
+	//				cout << places;
+	//			else {
+	//				cout << " Jesli chcesz sie ruszyc na pole: " << places[0] << places[1] << " wcisnij 1" << endl;
+	//				int wybor;
+	//				cin >> wybor;
+	//				if (wybor == 1);
+	//				board[(int)(places[1] - '1')][(int)(places[0] - 'A')].set_color(black_piece_sign);
+	//				board[y][x].set_color("blank");
+	//			}
+	//		}
+	//	}
+	//	return turn;
+	//}
 
 
 	void output(){
