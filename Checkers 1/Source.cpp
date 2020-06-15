@@ -1708,6 +1708,7 @@ public:
 };
 
 int main() {
+	SetConsoleTitle("Checkers");
 	Rules r1;
 	Game g1;
 }
