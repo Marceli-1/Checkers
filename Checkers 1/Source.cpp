@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include <sstream>
-#include <conio.h>
+#include <conio.h> // system("cls")
+#include <Windows.h> //sleep
 
 using namespace std;
 
@@ -10,7 +10,7 @@ const string white_piece_sign = "white";
 const string whitequeen_piece_sign = "whitequeen";
 const string blackqueen_piece_sign = "blackqueen";
 const int shape = 8;
-
+int time_fail = 500; // czas przerwy po zlym wybraniu pola
 
 class Place {
 public:
@@ -19,7 +19,7 @@ public:
 	bool queen = false;
 	bool existing_piece = false;
 
-	void set_color(string color) {
+	void set_color(string color) { //ustawianie odpowiednich symboli na planszy
 		if (color == white_piece_sign) {
 			character = '#';
 			blank_or_not = color;
@@ -83,6 +83,12 @@ public:
 
 	void input(bool& white_turn) { //bool ma sprawdzac czy ruch sie wykonal
 		char input[2];
+		
+
+		if(white_turn)
+			cout << endl << "Jest ruch bialych # " << endl;
+		else
+			cout << endl << "Jest ruch czarnych @ " << endl;
 		cout << "Wybierz pionek np.H3" << endl;
 		input[0] = _getch();
 		input[1] = _getch();
@@ -96,23 +102,25 @@ public:
 			if ((white_turn && temp.blank_or_not == white_piece_sign) or (white_turn && temp.blank_or_not == whitequeen_piece_sign )) { // white move
 				if (places_to_go_white(temp, x, y, white_turn) != white_turn)
 				{
-					white_turn = false;
-					gameBoard();
+					white_turn = false; 
+					//ardard();
 				}
 			}
 			else if ((!white_turn && temp.blank_or_not == black_piece_sign)or (!white_turn && temp.blank_or_not == blackqueen_piece_sign)) { // black move
 				if (places_to_go_black(temp, x, y, white_turn) != white_turn)
 				{
 					white_turn = true;
-					gameBoard();
+					//gameBoard();
 				}
 			}
 			else {
 				cout << "Podales niewlasciwe wspolrzedne :(" << endl;
+				Sleep(time_fail);
 			}
 		}
 		else {
 			cout << "Podales niewlasciwe wspolrzedne :(" << endl;
+			Sleep(time_fail);
 		}
 	}
 
@@ -129,13 +137,14 @@ public:
 	}
 
 	bool places_to_go_white(Place temp, int x, int y, bool turn) {
-		string places = "";
+		
+		string places = ""; //najwazniejszy string w klasie, jego rozmiar i poszczegolne elementy odpowiadaja za poruszanie sie, np places[0] i places[1] moze odpowiadac lokacji B3
 		bool move_available = false;
 		bool another_move = false; //bicie wielokrotne
 		do {
 			gameBoard();
 			move_available = false;
-			places = "";
+			places = ""; 
 
 			if (temp.queen == false) 
 			{
@@ -847,6 +856,7 @@ public:
 	}
 
 	bool places_to_go_black(Place temp, int x, int y, bool turn) {
+		
 		string places = "";
 		bool move_available = false;
 		bool another_move = false; //bicie wielokrotne
@@ -1014,13 +1024,12 @@ public:
 				}
 			}else {
 			for (int i = -1; i <= 1; i += 2) {
-				cout << "p" << places.size() << endl;
 				if (x + i < 8 && x + i >= 0 && y + i < 8 && y + i >= 0) { //kontrola skrajnych pol szachownicy
 					if (!board[y + i][x + i].existing_piece && !another_move) { //sprawdza czy na danym polu jest pionek
 						places += (char)(x + i + 'A');
 						places += (char)(y + i + '1');
 						places += ", ";
-						cout << places << endl;
+						
 						move_available = true; another_move = false;
 					}
 					else if (board[y + i][x + i].character != '@' and board[y + i][x + i].character != '^'  && board[y + i][x + i].existing_piece) {
@@ -1028,14 +1037,14 @@ public:
 						if (!out_of_plane(y + 2 * i, x + 2 * i) && !board[y + 2 * i][x + 2 * i].existing_piece) {
 							places += (char)(x + 2 * i + 'A');
 							places += (char)(y + 2 * i + '1');
-							places += ", "; cout << places << endl;
+							places += ", "; 
 							move_available = true; another_move = false;
 						}
 					}
 					if (!board[y - i][x + i].existing_piece && !another_move) { //sprawdza czy na danym polu jest pionek
 						places += (char)(x + i + 'A');
 						places += (char)(y - i + '1');
-						places += ", "; cout << places << endl;
+						places += ", "; 
 						move_available = true; another_move = false;
 					}
 					else if (board[y - i][x + i].character != '@' and board[y - i][x + i].character != '^'&& board[y - i][x + i].existing_piece) {
@@ -1043,7 +1052,7 @@ public:
 						if (!out_of_plane(y - 2 * i, x + 2 * i) && !board[y - 2 * i][x + 2 * i].existing_piece) {
 							places += (char)(x + 2 * i + 'A');
 							places += (char)(y - 2 * i + '1');
-							places += ", "; cout << places << endl;
+							places += ", "; 
 							move_available = true;
 						}
 					}
@@ -1060,7 +1069,7 @@ public:
 				places.erase(places.end() - 2);
 
 			}
-			cout << places.size() << endl;
+			
 			if (places.size() == 7)
 			{
 				cout << " Jesli chcesz sie ruszyc na pole: " << places[0] << places[1] << " wcisnij 1 ,a jesli interesuje cie pole: " << places[4] << places[5] << " wybierz 2" << endl;
@@ -1210,7 +1219,7 @@ public:
 				}
 				else
 				{
-					if (places.size() == 11)
+					if (places.size() == 11) // poruszanie sie damki gdy ma 3 opcje ruchu
 					{
 						cout << " Jesli chcesz sie ruszyc na pole: " << places[0] << places[1] << " wcisnij 1 ,a jesli interesuje cie pole: " << places[4] << places[5] << " wybierz 2, a jesli jednak chcesz na pole: " << places[8] << places[9] << " wcisnij 3" << endl;
 						int wybor;
@@ -1356,7 +1365,7 @@ public:
 					}
 					else
 					{
-						if (places.size() == 15)
+						if (places.size() == 15) // poruszanie sie damki gdy ma 4 opcje ruchu
 						{
 							cout << " Jesli chcesz sie ruszyc na pole: " << places[0] << places[1] << " wcisnij 1 ,a jesli interesuje cie pole: " << places[4] << places[5] << " wybierz 2, a jesli jednak chcesz na pole: " << places[8] << places[9] << " wcisnij 3, a jak zdecydujesz sie na pole: " << places[12] << places[13] << " wybierz 4" << endl;
 							int wybor;
@@ -1558,38 +1567,41 @@ public:
 			}
 
 
-}
+}			
 			temp = board[y][x];
+			cin.clear();
+			cin.ignore();
 			if (y == 0)
 				temp.queen = true;
-		} while (another_move);
+		} while (another_move); // bool another_move kontroluje kolejnosc ruchow przy biciu (bicie wielokrotne, wymaga aby ten sam kolor dalej mial ruch)
 		return !turn;
 	}
 
-	void output() {
-		int white;
-		int black;
+	//void output() { // funkcja sprawdzajaca, wykorzystywana w fazie debugowania
+	//	int white;
+	//	int black;
 
-		for (int i = 7; i >= 0; i--) {
-			for (int j = 0; j < 8; j++) {
+	//	for (int i = 7; i >= 0; i--) {
+	//		for (int j = 0; j < 8; j++) {
 
-				cout << board[i][j].character << " ";
+	//			cout << board[i][j].character << " ";
 
-			}
-			cout << endl;
-		}
-		char x;
-		for (int i = 0; i < 8; i++) {
-			x = 'A' + i;
-			cout << x << " ";
-		}
-	}
+	//		}
+	//		cout << endl;
+	//	}
+	//	char x;
+	//	for (int i = 0; i < 8; i++) {
+	//		x = 'A' + i;
+	//		cout << x << " ";
+	//	}
+	//}
 
 	bool gameBoard() // Drukuje pelna szachownice wraz z pionkami
 	{
 		int white=0;
 		int black=0;
-		//system("cls"); //czyszczenie wiersza polecen
+		Sleep(500);
+		system("cls"); //czyszczenie wiersza polecen
 		unsigned char upright = 191;
 		unsigned char leftdown = 192;
 		unsigned char downcentre = 193;
@@ -1639,7 +1651,7 @@ public:
 			j--;
 		}
 		cout << "   A   B   C   D   E   F   G   H" << endl << endl;
-
+		
 		if (black == 0) {
 			return 1;
 		}
@@ -1652,14 +1664,13 @@ public:
 };
 
 class Game {
-	//bool win = false;
 	bool white_turnn = true;
 public:
 	Game() {
 		Board board = Board();
 		board.gameBoard();
 
-		while (!board.gameBoard()) { //     (!win)
+		while (!board.gameBoard()) {
 			if (white_turnn)
 			{
 				board.input(white_turnn);
@@ -1674,6 +1685,7 @@ public:
 		for (int i = 0; i < 20; i++) {
 			cout << "KONIEC GRYY!!!!!!!!!!!!" << endl;
 		}
+		
 		
 	}
 	friend class Place;
