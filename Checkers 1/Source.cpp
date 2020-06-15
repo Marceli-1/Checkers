@@ -1691,6 +1691,23 @@ public:
 	friend class Place;
 };
 
+class Rules {
+public:
+	Rules() {
+		cout << "********************************************" << endl;
+		cout << "Pionki moga poruszac sie tylko przed siebie" << endl;
+		cout << "Pionki bija tylko do przodu" << endl;
+		cout << "Damki moga poruszac sie i bic w kazda strone" << endl;
+		cout << "Utrata wszystkich pionkow, skutkuje przegrana" << endl;
+		cout << "Nieprawidlowy ruch skutkuje jego utrata" << endl;
+		cout << "********************************************" << endl;
+		cout << endl << endl << endl;
+		cout << "Nacisnij ENTER" << endl << endl;;
+		system("Pause");
+	}
+};
+
 int main() {
+	Rules r1;
 	Game g1;
 }
