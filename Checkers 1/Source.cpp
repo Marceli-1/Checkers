@@ -1661,6 +1661,8 @@ public:
 		else
 			return 0;
 	}
+
+	~Board() {};
 };
 
 class Game {
@@ -1689,6 +1691,7 @@ public:
 		
 	}
 	friend class Place;
+	~Game() {};
 };
 
 class Rules {
@@ -1705,6 +1708,7 @@ public:
 		cout << "Nacisnij ENTER" << endl << endl;;
 		system("Pause");
 	}
+	~Rules() {};
 };
 
 int main() {
