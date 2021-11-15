@@ -1630,7 +1630,12 @@ public:
 			cout << j << stick;
 			for (int i = 0; i < 8; i++)
 			{
-				cout << " " << board[k][i].character << " " << stick; //wypisywanie ladnej tablicy, prawie jak w SFML'u
+				cout << " ";
+				if (board[k][i].character == NULL)
+					cout << " ";
+				else
+					cout << board[k][i].character;
+				cout << " " << stick; //wypisywanie ladnej tablicy, prawie jak w SFML'u
 
 				if ((board[k][i].blank_or_not == white_piece_sign) or (board[k][i].blank_or_not == whitequeen_piece_sign)) { //liczenie pionkow bialych
 					white += 1;
